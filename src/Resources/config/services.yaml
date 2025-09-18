@@ -1,0 +1,4 @@
+services:
+  Pawsitiwe\Controller\ValidationController:
+    arguments:
+      $formBuilder: '@sulu_form.builder'

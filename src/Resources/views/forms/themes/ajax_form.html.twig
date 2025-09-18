@@ -1,0 +1,110 @@
+{% extends '@SuluForm/themes/basic.html.twig' %}
+
+{%- block form_widget_compound -%}
+    <div {{ block('widget_container_attributes') }} class="fields">
+        {%- if form is rootform -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    </div>
+{%- endblock form_widget_compound -%}
+
+{%- block button_widget -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- elseif label is not same as(false) -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- set classes = 'button' -%}
+    {%- if type == 'submit' -%}
+        {%- set classes = classes ~ ' submit' -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" class="{{ classes }}" {{ block('button_attributes') }}>
+        <span{% if type == 'submit' %} class="text-container"{% endif %}>{{ translation_domain is same as(false) or label is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) }}</span>
+    </button>
+{%- endblock button_widget -%}
+{%- block form_row -%}
+    {# Typ aus block_prefixes holen (vorletztes Element) #}
+    {% set typeClass = form.vars.block_prefixes|slice(-2,1)|first %}
+
+    {# row_attr mit Theme-Klasse + error-container + Typ-Klasse zusammenbauen #}
+    {% set row_attr = row_attr|merge({
+        class: (typeClass ~ ' ' ~ block('sulu_form_row_class_name') ~ ' error-container')
+    }) %}
+
+    {# widget_attr für aria-describedby #}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {{- form_widget(form, widget_attr) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock -%}
+
+
+{%- block hidden_row -%}
+    <div class="error-container" hidden>
+        {{ form_widget(form) }}
+    </div>
+{%- endblock hidden_row -%}
+
+{%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+<form data-validation-url="/ajax/form/validate" class="ajax-form"{% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_end -%}
+    {%- if not render_rest is defined or render_rest -%}
+        {{ form_rest(form) }}
+    {%- endif -%}
+</form>
+{%- endblock form_end -%}
+
+{%- block widget_attributes -%}
+    id="{{ id }}" name="{{ full_name }}"
+    class="field{{ attr.class is defined ? ' ' ~ attr.class : '' }}"
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+    {{ block('attributes') }}
+{%- endblock widget_attributes -%}
+
+{%- block sulu_form_row_class_name -%}
+    {{- attr.width|default('full') -}}
+{%- endblock sulu_form_row_class_name -%}
+
+{%- block checkbox_row -%}
+    {% set typeClass = form.vars.block_prefixes|slice(-2,1)|first %}
+    {% set row_attr = row_attr|merge({class: typeClass ~ ' ' ~ block('sulu_form_row_class_name') ~ ' error-container'}) %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        <div class="{{ block('sulu_form_choice_class_name') }}">
+            {{- form_widget(form, widget_attr) -}}
+            {{- form_label(form) -}}
+        </div>
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock checkbox_row -%}

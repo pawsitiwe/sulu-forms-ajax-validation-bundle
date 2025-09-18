@@ -1,0 +1,17 @@
+{% form_theme form '@SuluFormsAjaxValidation/forms/themes/ajax_form.html.twig' %}
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+<div class="notifications" aria-live="assertive">
+    <div class="api-error notification error" hidden>
+        {{ errorText|default('ajax_form.error'|trans) }}
+    </div>
+    <div class="confirmation notification success" hidden>
+        {% if successText is not empty %}
+            {{ successText|raw }}
+        {% else %}
+            {{ 'ajax_form.success'|trans }}
+        {% endif %}
+    </div>
+</div>
+{{ form_end(form) }}

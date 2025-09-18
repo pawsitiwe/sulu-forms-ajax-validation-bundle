@@ -38,6 +38,23 @@ sulu_frontend_validation:
 
 The route /ajax/form/validate returns the form validation as JSON
 
+## Twig Integration
+
+Include the AJAX-enabled form in your templates using the provided partial:
+
+```twig
+{% include '@SuluFormsAjaxValidation/forms/partials/ajax_form.html.twig' with {
+    form: content.form,
+    successText: view.form.entity.successText,
+    errorText: 'Custom error message' # optional
+} %}
+```
+
+This partial automatically:
+- Uses the custom form theme ajax_form.html.twig
+- Displays error and success messages
+- Adds type-specific and additional CSS classes for styling
+
 ### Example Response
 
 ```json
@@ -60,5 +77,10 @@ The route /ajax/form/validate returns the form validation as JSON
         }
     ]
 }
-
 ```
+
+# Notes
+
+- The `form` parameter must be a **Sulu Form object**.
+- `successText` is optional; if empty, the default translation `ajax_form.success` will be used.
+- `errorText` is optional; if empty, the default translation `ajax_form.error` will be used.

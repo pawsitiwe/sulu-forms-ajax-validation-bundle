@@ -1,0 +1,3 @@
+ajax_form:
+    error: "Es ist ein Fehler aufgetreten"
+    success: "Formular erfolgreich abgeschickt"

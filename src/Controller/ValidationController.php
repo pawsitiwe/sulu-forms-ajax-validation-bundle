@@ -57,7 +57,13 @@ class ValidationController extends AbstractController
 
         foreach ($form->all() as $field) {
             $fieldName = $field->getName();
-            if ($fieldName === 'checksum' || $fieldName === 'submit') {
+            if (
+                $fieldName === 'checksum' ||
+                $fieldName === 'submit' ||
+                strpos($fieldName, 'headline') !== false ||
+                strpos($fieldName, 'freeText') !== false ||
+                strpos($fieldName, 'spacer') !== false
+            ) {
                 continue;
             }
 

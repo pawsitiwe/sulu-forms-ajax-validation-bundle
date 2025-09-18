@@ -37,3 +37,28 @@ sulu_frontend_validation:
 ## Usage
 
 The route /ajax/form/validate returns the form validation as JSON
+
+### Example Response
+
+```json
+{
+    "message": "",
+    "valid": false,
+    "fields": [
+        {
+            "id": "dynamic_form1_email",
+            "valid": false,
+            "modified": true,
+            "violation": {
+                "message": "This value should not be blank."
+            }
+        },
+        {
+            "id": "dynamic_form1_lastName",
+            "valid": true,
+            "modified": false
+        }
+    ]
+}
+
+```

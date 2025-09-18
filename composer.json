@@ -2,7 +2,7 @@
     "name": "pawsitiwe/sulu-forms-ajax-validation-bundle",
     "type": "sulu-form-bundle",
     "description": "A bundle for Sulu form ajax validation",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "keywords": ["sulu", "cms", "bundle", "validation"],
     "license": "MIT",
     "autoload": {

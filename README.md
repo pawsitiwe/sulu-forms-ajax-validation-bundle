@@ -45,7 +45,6 @@ Include the AJAX-enabled form in your templates using the provided partial:
 ```twig
 {% include '@SuluFormsAjaxValidation/forms/partials/ajax_form.html.twig' with {
     form: content.form,
-    successText: view.form.entity.successText,
     errorText: 'Custom error message' # optional
 } %}
 ```

@@ -2,7 +2,7 @@
     "name": "pawsitiwe/sulu-forms-ajax-validation-bundle",
     "type": "sulu-form-bundle",
     "description": "A bundle for Sulu form ajax validation",
-    "version": "0.3.0",
+    "version": "2.0.0",
     "keywords": ["sulu", "cms", "bundle", "validation"],
     "license": "MIT",
     "autoload": {
@@ -13,6 +13,6 @@
     "require": {
         "php": "^8.0",
         "symfony/framework-bundle": "^6.0 || ^7.0",
-        "sulu/form-bundle": "^2.0 || ^3.0"
+        "sulu/form-bundle": "^2.0"
     }
 }

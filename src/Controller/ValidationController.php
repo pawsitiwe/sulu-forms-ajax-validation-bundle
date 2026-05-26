@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Pawsitiwe\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\FormBundle\Configuration\FormConfigurationFactory;
+use Sulu\Bundle\FormBundle\Entity\Dynamic;
 use Sulu\Bundle\FormBundle\Form\BuilderInterface;
+use Sulu\Bundle\FormBundle\Form\HandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +16,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ValidationController extends AbstractController
 {
     private BuilderInterface $formBuilder;
-    private EntityManagerInterface $em;
+    private HandlerInterface $formHandler;
+    private FormConfigurationFactory $formConfigurationFactory;
 
-    public function __construct(BuilderInterface $formBuilder, EntityManagerInterface $em)
-    {
+    public function __construct(
+        BuilderInterface $formBuilder,
+        HandlerInterface $formHandler,
+        FormConfigurationFactory $formConfigurationFactory
+    ) {
         $this->formBuilder = $formBuilder;
-        $this->em = $em;
+        $this->formHandler = $formHandler;
+        $this->formConfigurationFactory = $formConfigurationFactory;
     }
 
     public function validateFormFields(Request $request): JsonResponse
@@ -74,10 +81,11 @@ class ValidationController extends AbstractController
         $formValidity = array_reduce($fieldsInformation, fn($carry, $field) => $carry && $field['valid'], true);
 
         if ($formValidity && $requestData['send']) {
+            /** @var Dynamic $formEntity */
             $formEntity = $form->getData();
 
-            $this->em->persist($formEntity);
-            $this->em->flush();
+            $configuration = $this->formConfigurationFactory->buildByDynamic($formEntity);
+            $this->formHandler->handle($form, $configuration);
         }
 
         return new JsonResponse([

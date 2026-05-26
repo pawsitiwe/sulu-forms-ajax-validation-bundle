@@ -1,17 +1,23 @@
-{% form_theme form '@SuluFormsAjaxValidation/forms/themes/ajax_form.html.twig' %}
-{{ form_start(form) }}
+{% set form_view = sulu_form_build(form, 'page', resource.id) %}
+{% form_theme form_view '@SuluFormsAjaxValidation/forms/themes/ajax_form.html.twig' %}
+{{ form_start(form_view) }}
 
-{{ form_widget(form) }}
+{{ form_widget(form_view) }}
 <div class="notifications" aria-live="assertive">
     <div class="api-error notification error" hidden>
         {{ errorText|default('ajax_form.error'|trans) }}
     </div>
     <div class="confirmation notification success" hidden>
-        {% if successText is not empty %}
-            {{ successText|raw }}
+        {% set locale = app.request.locale %}
+        {% set translation = form.entity.translations
+            |filter(t => t.locale == locale)
+            |first
+        %}
+        {% if translation.successText is not empty %}
+            {{ translation.successText|raw }}
         {% else %}
             {{ 'ajax_form.success'|trans }}
         {% endif %}
     </div>
 </div>
-{{ form_end(form) }}
+{{ form_end(form_view) }}

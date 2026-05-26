@@ -2,3 +2,5 @@ services:
   Pawsitiwe\Controller\ValidationController:
     arguments:
       $formBuilder: '@sulu_form.builder'
+      $formHandler: '@Sulu\Bundle\FormBundle\Form\HandlerInterface'
+      $formConfigurationFactory: '@Sulu\Bundle\FormBundle\Configuration\FormConfigurationFactory'

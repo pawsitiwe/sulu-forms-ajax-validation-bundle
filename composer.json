@@ -2,15 +2,17 @@
     "name": "pawsitiwe/sulu-forms-ajax-validation-bundle",
     "type": "sulu-form-bundle",
     "description": "A bundle for Sulu form ajax validation",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "keywords": ["sulu", "cms", "bundle", "validation"],
     "license": "MIT",
     "autoload": {
-        "psr-4": { "Pawsitiwe\\": "src/" }
+        "psr-4": {
+            "Pawsitiwe\\": "src/"
+        }
     },
     "require": {
-        "php": "^8.2",
-        "symfony/framework-bundle": "^6.0",
-        "sulu/form-bundle": "^2.0"
+        "php": "^8.0",
+        "symfony/framework-bundle": "^6.0 || ^7.0",
+        "sulu/form-bundle": "^2.0 || ^3.0"
     }
 }

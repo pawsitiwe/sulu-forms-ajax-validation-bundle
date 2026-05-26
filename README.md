@@ -17,6 +17,8 @@ services:
     Pawsitiwe\Controller\ValidationController:
         arguments:
             $formBuilder: '@sulu_form.builder'
+            $formHandler: '@sulu_form.handler'
+            $formConfigurationFactory: '@Sulu\Bundle\FormBundle\Configuration\FormConfigurationFactory'
         tags: ['controller.service_arguments']
 ```
 ### Bundle Registration

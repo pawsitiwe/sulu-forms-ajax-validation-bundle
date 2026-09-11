@@ -20,7 +20,18 @@ services:
             $formHandler: '@sulu_form.handler'
             $formConfigurationFactory: '@Sulu\Bundle\FormBundle\Configuration\FormConfigurationFactory'
         tags: ['controller.service_arguments']
+
+    Pawsitiwe\EventListener\ValidationRequestLocaleListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', priority: 10 }
 ```
+
+The `/ajax/form/validate` path carries no locale/webspace segment, so Sulu
+would otherwise always resolve it to the default presence. The listener
+re-resolves the real webspace/locale from the `Referer` header (the page the
+form was actually submitted from) before any other `kernel.request` listener
+(e.g. maintenance mode) sees the request — this is why it needs a priority
+higher than 0.
 ### Bundle Registration
 
 ```php

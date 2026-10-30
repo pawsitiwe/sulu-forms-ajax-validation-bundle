@@ -10,6 +10,7 @@ use Sulu\Bundle\FormBundle\Form\BuilderInterface;
 use Sulu\Bundle\FormBundle\Form\HandlerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,6 +82,19 @@ class ValidationController extends AbstractController
             $form = $this->formBuilder->build(intval($formData["formId"]), $formData["type"], $formData["typeId"], $locale, $formData["formName"]);
             if (!$form instanceof FormInterface) {
                 return new JsonResponse(['message' => 'No form data found'], 400);
+            }
+
+            // The frontend sends an unchecked checkbox as an empty string, which
+            // Symfony's CheckboxType treats as checked. Submit null instead so
+            // constraints like NotBlank on required checkboxes can fail.
+            foreach ($formData as $name => $value) {
+                if (
+                    '' === $value
+                    && $form->has($name)
+                    && $form->get($name)->getConfig()->getType()->getInnerType() instanceof CheckboxType
+                ) {
+                    $formData[$name] = null;
+                }
             }
 
             $form->submit($formData);
